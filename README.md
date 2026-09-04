@@ -29,3 +29,6 @@ A modern live weather dashboard that provides current weather conditions, hourly
 
 ```bash
 git clone https://github.com/riteshmanna56789-sketch/WeatherPulse.git
+## 📚 Learning
+
+This project is also helping me learn React, TypeScript, Git, and GitHub.
