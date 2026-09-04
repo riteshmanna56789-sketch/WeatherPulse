@@ -53,22 +53,33 @@ export interface WeatherSnapshot {
 }
 
 export interface CitySearchResult {
+  id: number
   name: string
   region: string
   country: string
+  countryCode: string
   latitude: number
   longitude: number
   timezone: string
+  featureCode?: string
+  population?: number
 }
 
 export interface OpenMeteoGeocodingResponse {
   results?: Array<{
+    id?: number
     name?: string
     admin1?: string
     country?: string
     latitude?: number
     longitude?: number
     timezone?: string
+    feature_code?: string
+    country_code?: string
+    population?: number
+  generationtime_ms?: number
+  timezone_abbreviation?: string
+  utc_offset_seconds?: number
   }>
 }
 

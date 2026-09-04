@@ -44,21 +44,26 @@ export async function searchCities(
   )
 
   return (response.results ?? []).flatMap((result) => {
-    if (
-      !result.name ||
-      typeof result.latitude !== 'number' ||
-      typeof result.longitude !== 'number'
-    ) {
-      return []
-    }
+  if (
+  typeof result.id !== "number" ||
+  !result.name ||
+  typeof result.latitude !== "number" ||
+  typeof result.longitude !== "number"
+) {
+  return []
+}
     return [
       {
+        id: result.id,
         name: result.name,
         region: result.admin1 ?? '',
         country: result.country ?? '',
+        countryCode: result.country_code ?? '',
         latitude: result.latitude,
         longitude: result.longitude,
         timezone: result.timezone ?? 'auto',
+        featureCode: result.feature_code ?? '',
+        population: result.population,
       },
     ]
   })

@@ -5,13 +5,16 @@ import HourlyForecast from './components/weather/HourlyForecast'
 import DailyForecast from './components/weather/DailyForecast'
 import { useTheme } from './hooks/useTheme'
 import { defaultCity, getWeatherForCity } from './data/mockWeather'
-import { cityLabel } from './services/weatherAdapter'
 import { fetchWeather, searchCities, WeatherApiError } from './services/weatherApi'
 import type { CitySearchResult, WeatherSnapshot } from './types/weather'
 
 export default function App() {
   const { theme, toggleTheme } = useTheme()
-  const [snapshot, setSnapshot] = useState<WeatherSnapshot>(() => getWeatherForCity(defaultCity))
+
+  const [snapshot, setSnapshot] = useState<WeatherSnapshot>(() =>
+    getWeatherForCity(defaultCity)
+  )
+
   const [suggestions, setSuggestions] = useState<CitySearchResult[]>([])
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
@@ -19,10 +22,15 @@ export default function App() {
 
   useEffect(() => {
     const controller = new AbortController()
+
     searchCities(defaultCity, controller.signal)
       .then((results) => {
         const match = results[0]
-        if (!match) throw new WeatherApiError(`Could not find ${defaultCity}.`)
+
+        if (!match) {
+          throw new WeatherApiError(`Could not find ${defaultCity}.`)
+        }
+
         return fetchWeather(match, controller.signal)
       })
       .then((weather) => {
@@ -31,26 +39,34 @@ export default function App() {
       })
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === 'AbortError') return
-        setNotice('Live weather is unavailable right now. Showing sample data instead.')
+
+        setNotice(
+          'Live weather is unavailable right now. Showing sample data instead.'
+        )
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
 
     return () => controller.abort()
   }, [])
 
   useEffect(() => {
     const trimmedQuery = query.trim()
+
     if (trimmedQuery.length < 2) {
       setSuggestions([])
       return
     }
 
     const controller = new AbortController()
+
     const timeout = window.setTimeout(() => {
       searchCities(trimmedQuery, controller.signal)
         .then(setSuggestions)
         .catch((error: unknown) => {
           if (error instanceof DOMException && error.name === 'AbortError') return
+
           setSuggestions([])
         })
     }, 300)
@@ -65,28 +81,25 @@ export default function App() {
     setQuery(nextQuery)
   }
 
-  async function handleSearch(searchValue: string) {
+  async function handleSearch(city: CitySearchResult) {
     const controller = new AbortController()
+
     setLoading(true)
     setNotice(null)
 
     try {
-      const results = await searchCities(searchValue, controller.signal)
-      const match = results[0]
-      if (!match) {
-        setNotice(`We couldn't find a city named "${searchValue}". Try a different search.`)
-        return
-      }
-      const weather = await fetchWeather(match, controller.signal)
+      const weather = await fetchWeather(city, controller.signal)
+
       setSnapshot(weather)
       setSuggestions([])
       setQuery('')
     } catch (error: unknown) {
       if (error instanceof DOMException && error.name === 'AbortError') return
+
       setNotice(
         error instanceof WeatherApiError
           ? error.message
-          : 'Unable to load live weather. Please check your connection and try again.',
+          : 'Unable to load live weather. Please check your connection and try again.'
       )
     } finally {
       setLoading(false)
@@ -98,7 +111,7 @@ export default function App() {
       <Header
         onSearch={handleSearch}
         onQueryChange={handleQueryChange}
-        suggestions={suggestions.map(cityLabel)}
+        suggestions={suggestions}
         theme={theme}
         onToggleTheme={toggleTheme}
       />
@@ -112,7 +125,10 @@ export default function App() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
           <div className="flex flex-col gap-6 lg:col-span-2">
-            <CurrentWeatherCard location={snapshot.location} current={snapshot.current} />
+            <CurrentWeatherCard
+              location={snapshot.location}
+              current={snapshot.current}
+            />
           </div>
 
           <div className="lg:col-span-1">
