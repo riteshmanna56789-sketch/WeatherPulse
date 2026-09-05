@@ -277,10 +277,11 @@ export default function App() {
           </div>
 
           <div className="lg:col-span-1">
-            <DailyForecast
-              days={snapshot.daily}
-              unit={unit}
-            />
+             <DailyForecast
+  days={snapshot.daily}
+  unit={unit}
+  currentTemperature={snapshot.current.temperature}
+/>
           </div>
         </div>
 
