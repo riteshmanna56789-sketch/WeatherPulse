@@ -43,14 +43,40 @@ export default function CurrentWeatherCard({
     : null
 
   return (
-    <section className="animate-rise rounded-3xl border border-ink/10 bg-gradient-to-br from-white/80 to-white/40 p-6 shadow-[0_1px_0_0_rgba(15,27,45,0.04)] dark:border-paper/10 dark:from-ink-soft/80 dark:to-ink-soft/30 sm:p-8">
-      <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
-        <div>
-          <div className="flex items-center gap-3">
-            <p className="font-body text-sm text-slate">
-              {location.city}, {location.region}
-            </p>
+    <section className="relative isolate overflow-hidden rounded-3xl border border-ink/10 bg-gradient-to-br from-white via-white/90 to-sky-500/5 p-5 shadow-[0_20px_60px_rgba(15,27,45,0.08)] dark:border-paper/10 dark:from-ink-soft dark:via-ink-soft/95 dark:to-sky-500/5 sm:p-7 lg:p-8">
+      <div className="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl dark:bg-sky-400/10" />
 
+      <div className="pointer-events-none absolute -bottom-32 left-1/3 -z-10 h-64 w-64 rounded-full bg-amber/10 blur-3xl" />
+
+      <div className="relative">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink/5 text-slate dark:bg-paper/5">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.7}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z" />
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="2"
+                />
+              </svg>
+            </div>
+
+            <p className="truncate font-body text-sm font-medium text-slate">
+              {location.city}
+              {location.region ? `, ${location.region}` : ''}
+            </p>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-1.5">
             {city && (
               <button
                 type="button"
@@ -61,7 +87,11 @@ export default function CurrentWeatherCard({
                     : `Add ${city.name} to favorites`
                 }
                 aria-pressed={isFavorite}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-amber transition-colors hover:bg-amber/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
+                className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber ${
+                  isFavorite
+                    ? 'border-amber/30 bg-amber/10 text-amber'
+                    : 'border-transparent text-slate hover:border-amber/20 hover:bg-amber/10 hover:text-amber'
+                }`}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -72,7 +102,7 @@ export default function CurrentWeatherCard({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2-1 5.9-5.2-2.8-5.2 2.8-1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
+                  <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8-1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
                 </svg>
               </button>
             )}
@@ -82,7 +112,7 @@ export default function CurrentWeatherCard({
               onClick={onRefresh}
               disabled={loading || !city}
               aria-label="Refresh weather"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-amber/10 hover:text-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-slate transition-all duration-200 hover:border-amber/20 hover:bg-amber/10 hover:text-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber disabled:cursor-not-allowed disabled:opacity-50"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -108,7 +138,7 @@ export default function CurrentWeatherCard({
               aria-label={`Switch to ${
                 unit === 'celsius' ? 'Fahrenheit' : 'Celsius'
               }`}
-              className="ml-1 flex h-8 items-center rounded-full border border-ink/10 bg-white/60 px-1 font-body text-xs font-semibold text-slate transition-colors hover:border-amber/40 hover:bg-amber/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber dark:border-paper/10 dark:bg-ink-soft/60"
+              className="ml-1 flex h-9 items-center rounded-full border border-ink/10 bg-white/70 px-1 font-body text-xs font-semibold text-slate shadow-sm transition-all duration-200 hover:border-amber/30 hover:bg-amber/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber dark:border-paper/10 dark:bg-paper/5"
             >
               <span
                 className={`rounded-full px-2 py-1 transition-colors ${
@@ -123,7 +153,7 @@ export default function CurrentWeatherCard({
               <span
                 className={`rounded-full px-2 py-1 transition-colors ${
                   unit === 'fahrenheit'
-                    ? 'bg-ink text-paper dark:bg-ink-soft dark:text-paper'
+                    ? 'bg-ink text-paper dark:bg-paper dark:text-ink'
                     : ''
                 }`}
               >
@@ -131,102 +161,159 @@ export default function CurrentWeatherCard({
               </span>
             </button>
           </div>
+        </div>
 
-          <div className="mt-3 flex items-end gap-4">
-            <span className="font-display text-7xl font-light leading-none text-ink dark:text-paper sm:text-8xl">
-              {formatTemperature(current.temperature, unit)}
-            </span>
+        <div className="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-10">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-end gap-4 sm:gap-6">
+              <div>
+                <span className="font-display text-7xl font-light leading-none tracking-[-0.05em] text-ink dark:text-paper sm:text-8xl">
+                  {formatTemperature(current.temperature, unit)}
+                </span>
 
-            <div className="mb-2 flex items-center gap-2 text-dusk dark:text-amber">
-              <WeatherIcon
-                condition={current.condition}
-                className="h-7 w-7"
+                <div className="mt-3 flex items-center gap-2">
+                  <WeatherIcon
+                    condition={current.condition}
+                    className="h-6 w-6 text-dusk dark:text-amber"
+                  />
+
+                  <span className="font-display text-base font-semibold text-ink dark:text-paper sm:text-lg">
+                    {current.conditionLabel}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mb-1 flex items-center gap-2 rounded-full border border-ink/10 bg-white/60 px-3 py-2 dark:border-paper/10 dark:bg-paper/5">
+                <span className="text-sm">🌡️</span>
+
+                <span className="font-body text-xs text-slate">
+                  Feels like
+                </span>
+
+                <span className="font-display text-sm font-semibold text-ink dark:text-paper">
+                  {formatTemperature(current.feelsLike, unit)}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <FeelsLikeIndicator
+                temperature={current.feelsLike}
+                unit={unit}
               />
+            </div>
 
-              <span className="font-display text-base font-medium text-ink dark:text-paper">
-                {current.conditionLabel}
-              </span>
+            <div className="mt-5">
+              <UvIndexIndicator
+                uvIndex={current.uvIndex}
+              />
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <div className="flex items-center gap-2">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4 text-slate"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.7}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="8.5"
+                  />
+
+                  <path d="M12 7v5l3 2" />
+                </svg>
+
+                <p className="font-body text-xs text-slate">
+                  Local time {location.localTime}
+                </p>
+              </div>
+
+              {formattedLastUpdated && (
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+
+                  <p className="font-body text-xs text-slate">
+                    Updated {formattedLastUpdated}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
-          <FeelsLikeIndicator
-            temperature={current.feelsLike}
-            unit={unit}
-          />
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 lg:grid-cols-1">
+            <div className="rounded-2xl border border-ink/10 bg-white/65 p-4 shadow-sm backdrop-blur-sm transition-all duration-200 hover:border-ink/15 hover:bg-white/80 dark:border-paper/10 dark:bg-paper/[0.04] dark:hover:bg-paper/[0.07]">
+              <StatTick
+                label="Humidity"
+                value={`${current.humidity}%`}
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.6}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 3.5c3 4 6 7.4 6 10.8a6 6 0 1 1-12 0c0-3.4 3-6.8 6-10.8Z" />
+                  </svg>
+                }
+              />
+            </div>
 
-          <UvIndexIndicator
-            uvIndex={current.uvIndex}
-          />
+            <div className="rounded-2xl border border-ink/10 bg-white/65 p-4 shadow-sm backdrop-blur-sm transition-all duration-200 hover:border-ink/15 hover:bg-white/80 dark:border-paper/10 dark:bg-paper/[0.04] dark:hover:bg-paper/[0.07]">
+              <StatTick
+                label="Wind"
+                value={`${current.windSpeed} km/h ${current.windDirection}`}
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.6}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 8h11.5a2.75 2.75 0 1 0-2.4-4.1" />
+                    <path d="M3 13h15.5a2.75 2.75 0 1 1-2.4 4.1" />
+                  </svg>
+                }
+              />
+            </div>
 
-          <div className="mt-2 space-y-1">
-            <p className="font-body text-sm text-slate">
-              Local time {location.localTime}
-            </p>
+            <div className="rounded-2xl border border-ink/10 bg-white/65 p-4 shadow-sm backdrop-blur-sm transition-all duration-200 hover:border-ink/15 hover:bg-white/80 dark:border-paper/10 dark:bg-paper/[0.04] dark:hover:bg-paper/[0.07]">
+              <StatTick
+                label="Pressure"
+                value={`${current.pressure} hPa`}
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.6}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8.5"
+                    />
 
-            {formattedLastUpdated && (
-              <p className="font-body text-xs text-slate/80">
-                Updated {formattedLastUpdated}
-              </p>
-            )}
+                    <path d="M12 12 15.2 9" />
+                  </svg>
+                }
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink/10 pt-6 dark:border-paper/10 sm:grid-cols-3 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
-          <StatTick
-            label="Humidity"
-            value={`${current.humidity}%`}
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 3.5c3 4 6 7.4 6 10.8a6 6 0 1 1-12 0c0-3.4 3-6.8 6-10.8Z" />
-              </svg>
-            }
-          />
-
-          <StatTick
-            label="Wind"
-            value={`${current.windSpeed} km/h ${current.windDirection}`}
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 8h11.5a2.75 2.75 0 1 0-2.4-4.1" />
-                <path d="M3 13h15.5a2.75 2.75 0 1 1-2.4 4.1" />
-              </svg>
-            }
-          />
-
-          <StatTick
-            label="Pressure"
-            value={`${current.pressure} hPa`}
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="8.5" />
-                <path d="M12 12 15.2 9" />
-              </svg>
-            }
-          />
         </div>
       </div>
     </section>
