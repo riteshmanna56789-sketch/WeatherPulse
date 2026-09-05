@@ -48,6 +48,7 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [notice, setNotice] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -66,6 +67,7 @@ export default function App() {
       })
       .then((weather) => {
         setSnapshot(weather)
+        setLastUpdated(Date.now())
         setNotice(null)
       })
       .catch((error: unknown) => {
@@ -123,6 +125,7 @@ export default function App() {
 
       setSelectedCity(city)
       setSnapshot(weather)
+      setLastUpdated(Date.now())
       setSuggestions([])
       setQuery('')
     } catch (error: unknown) {
@@ -148,6 +151,7 @@ export default function App() {
 
       setSelectedCity(location)
       setSnapshot(weather)
+      setLastUpdated(Date.now())
       setSuggestions([])
       setQuery('')
     } catch (error: unknown) {
@@ -174,6 +178,7 @@ export default function App() {
 
       setSelectedCity(city)
       setSnapshot(weather)
+      setLastUpdated(Date.now())
     } catch (error: unknown) {
       setNotice(
         error instanceof WeatherApiError
@@ -195,11 +200,12 @@ export default function App() {
       const weather = await fetchWeather(selectedCity)
 
       setSnapshot(weather)
+      setLastUpdated(Date.now())
     } catch (error: unknown) {
       setNotice(
         error instanceof WeatherApiError
           ? error.message
-          : 'Unable to refresh weather. Please check your connection and try again.'
+          : 'Unable to refresh weather. Please try again.'
       )
     } finally {
       setLoading(false)
@@ -259,21 +265,22 @@ export default function App() {
               loading={loading}
               unit={unit}
               onToggleUnit={toggleUnit}
+              lastUpdated={lastUpdated}
             />
           </div>
 
           <div className="lg:col-span-1">
-           <HourlyForecast
-  hours={snapshot.hourly}
-  unit={unit}
-/>
+            <HourlyForecast
+              hours={snapshot.hourly}
+              unit={unit}
+            />
           </div>
 
           <div className="lg:col-span-1">
-           <DailyForecast
-  days={snapshot.daily}
-  unit={unit}
-/>
+            <DailyForecast
+              days={snapshot.daily}
+              unit={unit}
+            />
           </div>
         </div>
 

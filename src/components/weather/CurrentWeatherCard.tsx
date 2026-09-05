@@ -20,6 +20,7 @@ interface CurrentWeatherCardProps {
   loading: boolean
   unit: TemperatureUnit
   onToggleUnit: () => void
+  lastUpdated: number | null
 }
 
 export default function CurrentWeatherCard({
@@ -31,8 +32,16 @@ export default function CurrentWeatherCard({
   onRefresh,
   loading,
   unit,
-  onToggleUnit
+  onToggleUnit,
+  lastUpdated
 }: CurrentWeatherCardProps) {
+  const formattedLastUpdated = lastUpdated
+    ? new Intl.DateTimeFormat('en', {
+        hour: 'numeric',
+        minute: '2-digit'
+      }).format(lastUpdated)
+    : null
+
   return (
     <section className="animate-rise rounded-3xl border border-ink/10 bg-gradient-to-br from-white/80 to-white/40 p-6 shadow-[0_1px_0_0_rgba(15,27,45,0.04)] dark:border-paper/10 dark:from-ink-soft/80 dark:to-ink-soft/30 sm:p-8">
       <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
@@ -63,7 +72,7 @@ export default function CurrentWeatherCard({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8-1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
+                  <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2-1 5.9-5.2-2.8-5.2 2.8-1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
                 </svg>
               </button>
             )}
@@ -114,7 +123,7 @@ export default function CurrentWeatherCard({
               <span
                 className={`rounded-full px-2 py-1 transition-colors ${
                   unit === 'fahrenheit'
-                    ? 'bg-ink text-paper dark:bg-paper dark:text-ink'
+                    ? 'bg-ink text-paper dark:bg-ink-soft dark:text-paper'
                     : ''
                 }`}
               >
@@ -149,9 +158,17 @@ export default function CurrentWeatherCard({
             uvIndex={current.uvIndex}
           />
 
-          <p className="mt-2 font-body text-sm text-slate">
-            Local time {location.localTime}
-          </p>
+          <div className="mt-2 space-y-1">
+            <p className="font-body text-sm text-slate">
+              Local time {location.localTime}
+            </p>
+
+            {formattedLastUpdated && (
+              <p className="font-body text-xs text-slate/80">
+                Updated {formattedLastUpdated}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink/10 pt-6 dark:border-paper/10 sm:grid-cols-3 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
