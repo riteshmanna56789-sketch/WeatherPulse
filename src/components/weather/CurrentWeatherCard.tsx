@@ -8,6 +8,7 @@ import { formatTemperature } from '../../utils/temperature'
 import WeatherIcon from '../ui/WeatherIcon'
 import StatTick from './StatTick'
 import FeelsLikeIndicator from './FeelsLikeIndicator'
+import UvIndexIndicator from './UvIndexIndicator'
 
 interface CurrentWeatherCardProps {
   location: LocationInfo
@@ -144,12 +145,16 @@ export default function CurrentWeatherCard({
             unit={unit}
           />
 
+          <UvIndexIndicator
+            uvIndex={current.uvIndex}
+          />
+
           <p className="mt-2 font-body text-sm text-slate">
             Local time {location.localTime}
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink/10 pt-6 dark:border-paper/10 sm:grid-cols-4 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink/10 pt-6 dark:border-paper/10 sm:grid-cols-3 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
           <StatTick
             label="Humidity"
             value={`${current.humidity}%`}
@@ -183,25 +188,6 @@ export default function CurrentWeatherCard({
               >
                 <path d="M3 8h11.5a2.75 2.75 0 1 0-2.4-4.1" />
                 <path d="M3 13h15.5a2.75 2.75 0 1 1-2.4 4.1" />
-              </svg>
-            }
-          />
-
-          <StatTick
-            label="UV index"
-            value={`${current.uvIndex}`}
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2.5v2.6M12 18.9v2.6M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8" />
               </svg>
             }
           />
