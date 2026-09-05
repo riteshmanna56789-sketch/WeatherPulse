@@ -1,19 +1,29 @@
 # 🌦️ WeatherPulse
 
-A modern live weather dashboard that provides current weather conditions, hourly forecasts, and a 7-day forecast for cities around the world.
+A modern, responsive weather dashboard built with React and TypeScript. WeatherPulse provides live weather information, forecasts, saved locations, weather intelligence, and a polished experience across desktop and mobile.
 
 ## ✨ Features
 
-- 🔍 Search weather by city
+- 🔍 Search for cities around the world
+- 📍 Use your current location
+- ⭐ Save and manage favorite locations
 - 🌡️ Current temperature and feels-like temperature
-- 💧 Humidity and wind information
-- 🌦️ Weather condition indicators
-- 🕐 Hourly weather forecast
-- 📅 7-day forecast
-- 🌙 Dark/light theme
-- ⚡ Live weather data
-- 📱 Responsive design for desktop and mobile
+- 💧 Humidity, wind, and pressure information
+- 🌦️ Weather condition indicators with custom weather icons
+- 🕐 12-hour hourly forecast
+- 📅 7-day daily forecast
+- 🌅 Sunrise and sunset times
+- ☀️ UV Index intelligence
+- 💡 Weather Insight based on current conditions
+- 🔄 Manual weather refresh
+- 🌡️ Celsius / Fahrenheit temperature units
+- 🌙 Light and dark themes
+- 🕒 Last updated information
+- ⚡ Live weather data from Open-Meteo
+- 📱 Responsive design for desktop, tablet, and mobile
+- ♿ Keyboard-friendly interactions and accessible UI
 - ❌ Loading and error states
+- 🎨 Modern UI with Tailwind CSS
 
 ## 🛠️ Tech Stack
 
@@ -22,6 +32,8 @@ A modern live weather dashboard that provides current weather conditions, hourly
 - Vite
 - Tailwind CSS
 - Open-Meteo API
+- Git
+- GitHub
 
 ## 🚀 Getting Started
 
@@ -29,6 +41,3 @@ A modern live weather dashboard that provides current weather conditions, hourly
 
 ```bash
 git clone https://github.com/riteshmanna56789-sketch/WeatherPulse.git
-## 📚 Learning
-
-This project is also helping me learn React, TypeScript, Git, and GitHub.git
