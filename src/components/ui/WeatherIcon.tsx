@@ -22,7 +22,8 @@ export default function WeatherIcon({
     stroke: 'currentColor',
     strokeWidth: 1.5,
     strokeLinecap: 'round' as const,
-    strokeLinejoin: 'round' as const
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true
   }
 
   switch (condition) {

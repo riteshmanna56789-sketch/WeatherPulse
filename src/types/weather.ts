@@ -45,11 +45,18 @@ export interface LocationInfo {
   localTime: string
 }
 
+export interface DaylightInfo {
+  sunrise: string
+  sunset: string
+  daylightDuration: number
+}
+
 export interface WeatherSnapshot {
   location: LocationInfo
   current: CurrentWeather
   hourly: HourlyReading[]
   daily: DailyReading[]
+  daylight?: DaylightInfo
 }
 
 export interface CitySearchResult {
@@ -77,10 +84,10 @@ export interface OpenMeteoGeocodingResponse {
     feature_code?: string
     country_code?: string
     population?: number
+  }>
   generationtime_ms?: number
   timezone_abbreviation?: string
   utc_offset_seconds?: number
-  }>
 }
 
 export interface OpenMeteoWeatherResponse {
@@ -96,19 +103,25 @@ export interface OpenMeteoWeatherResponse {
     surface_pressure?: number
     visibility?: number
   }
+
   hourly?: {
     time?: string[]
     temperature_2m?: number[]
     precipitation_probability?: number[]
     weather_code?: number[]
   }
+
   daily?: {
     time?: string[]
     weather_code?: number[]
     temperature_2m_max?: number[]
     temperature_2m_min?: number[]
     precipitation_probability_max?: number[]
+    sunrise?: string[]
+    sunset?: string[]
+    daylight_duration?: number[]
   }
+
   timezone?: string
   timezone_abbreviation?: string
 }

@@ -20,11 +20,15 @@ export default function FavoriteLocations({
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber/10 text-amber">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber/10 text-amber"
+              aria-hidden="true"
+            >
               <svg
                 viewBox="0 0 24 24"
                 className="h-4 w-4"
                 fill="currentColor"
+                aria-hidden="true"
               >
                 <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
               </svg>
@@ -59,15 +63,21 @@ export default function FavoriteLocations({
               animationDelay: `${index * 50}ms`
             }}
           >
-            <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-amber/10 blur-2xl transition-transform duration-500 group-hover:scale-125" />
+            <div
+              className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-amber/10 blur-2xl transition-transform duration-500 group-hover:scale-125"
+              aria-hidden="true"
+            />
 
             <div className="relative flex items-center gap-3 p-4">
               <button
                 type="button"
                 onClick={() => onSelect(city)}
-                className="flex min-w-0 flex-1 items-center gap-3 text-left focus-visible:outline-none"
+                className="flex min-w-0 flex-1 items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-paper dark:focus-visible:ring-offset-ink"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-amber/15 bg-amber/10 text-amber transition-all duration-200 group-hover:border-amber/25 group-hover:bg-amber/15">
+                <span
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-amber/15 bg-amber/10 text-amber transition-all duration-200 group-hover:border-amber/25 group-hover:bg-amber/15"
+                  aria-hidden="true"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     className="h-5 w-5"
@@ -76,6 +86,7 @@ export default function FavoriteLocations({
                     strokeWidth={1.7}
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    aria-hidden="true"
                   >
                     <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z" />
 
@@ -93,11 +104,15 @@ export default function FavoriteLocations({
                       {city.name}
                     </span>
 
-                    <span className="shrink-0 text-amber opacity-70">
+                    <span
+                      className="shrink-0 text-amber opacity-70"
+                      aria-hidden="true"
+                    >
                       <svg
                         viewBox="0 0 24 24"
                         className="h-3.5 w-3.5"
                         fill="currentColor"
+                        aria-hidden="true"
                       >
                         <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
                       </svg>
@@ -119,6 +134,7 @@ export default function FavoriteLocations({
                   strokeWidth={1.75}
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
                   <path d="m9 18 6-6-6-6" />
                 </svg>
@@ -138,6 +154,7 @@ export default function FavoriteLocations({
                   strokeWidth={1.75}
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
                   <path d="M6 6 18 18" />
                   <path d="m18 6-12 12" />

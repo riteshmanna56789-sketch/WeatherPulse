@@ -1,6 +1,9 @@
 import type { DailyReading } from '../../types/weather'
 import type { TemperatureUnit } from '../../utils/temperature'
-import { convertTemperature, formatTemperature } from '../../utils/temperature'
+import {
+  convertTemperature,
+  formatTemperature
+} from '../../utils/temperature'
 import WeatherIcon from '../ui/WeatherIcon'
 
 interface DailyForecastProps {
@@ -20,14 +23,21 @@ export default function DailyForecast({
     high: convertTemperature(day.high, unit)
   }))
 
-  const weekLow = Math.min(...convertedDays.map((day) => day.low))
-  const weekHigh = Math.max(...convertedDays.map((day) => day.high))
+  const weekLow = Math.min(
+    ...convertedDays.map((day) => day.low)
+  )
+
+  const weekHigh = Math.max(
+    ...convertedDays.map((day) => day.high)
+  )
+
   const span = weekHigh - weekLow || 1
 
-  const formattedCurrentTemperature = formatTemperature(
-    currentTemperature,
-    unit
-  )
+  const formattedCurrentTemperature =
+    formatTemperature(
+      currentTemperature,
+      unit
+    )
 
   return (
     <section className="animate-rise overflow-hidden rounded-3xl border border-ink/10 bg-gradient-to-br from-white/90 via-white/70 to-amber/10 shadow-[0_20px_60px_rgba(15,27,45,0.08)] dark:border-paper/10 dark:from-ink-soft dark:via-ink-soft/95 dark:to-dusk/30">
@@ -54,8 +64,15 @@ export default function DailyForecast({
 
         {convertedDays[0] && (
           <div className="relative mt-6 overflow-hidden rounded-3xl border border-amber/20 bg-gradient-to-br from-dusk via-dusk/95 to-ink-soft p-5 text-paper shadow-lg sm:p-7">
-            <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-amber/20 blur-3xl" />
-            <div className="absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-paper/10 blur-3xl" />
+            <div
+              className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-amber/20 blur-3xl"
+              aria-hidden="true"
+            />
+
+            <div
+              className="absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-paper/10 blur-3xl"
+              aria-hidden="true"
+            />
 
             <div className="relative">
               <div className="flex items-start justify-between gap-4">
@@ -76,9 +93,14 @@ export default function DailyForecast({
 
               <div className="mt-7 flex flex-col gap-7 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-5">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-paper/10 bg-paper/10 backdrop-blur-sm sm:h-24 sm:w-24">
+                  <div
+                    className="flex h-20 w-20 items-center justify-center rounded-3xl border border-paper/10 bg-paper/10 backdrop-blur-sm sm:h-24 sm:w-24"
+                    aria-hidden="true"
+                  >
                     <WeatherIcon
-                      condition={convertedDays[0].condition}
+                      condition={
+                        convertedDays[0].condition
+                      }
                       className="h-12 w-12 text-amber sm:h-14 sm:w-14"
                     />
                   </div>
@@ -102,14 +124,25 @@ export default function DailyForecast({
 
                   <div className="mt-2 flex items-center gap-3">
                     <span className="w-9 shrink-0 font-body text-sm font-medium">
-                      {formatTemperature(convertedDays[0].low, unit)}
+                      {formatTemperature(
+                        convertedDays[0].low,
+                        unit
+                      )}
                     </span>
 
-                    <div className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-paper/15">
+                    <div
+                      className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-paper/15"
+                      aria-hidden="true"
+                    >
                       <div
                         className="absolute top-0 h-full rounded-full bg-gradient-to-r from-paper/50 via-amber to-amber"
                         style={{
-                          left: `${((convertedDays[0].low - weekLow) / span) * 100}%`,
+                          left: `${
+                            ((convertedDays[0].low -
+                              weekLow) /
+                              span) *
+                            100
+                          }%`,
                           width: `${Math.max(
                             ((convertedDays[0].high -
                               convertedDays[0].low) /
@@ -141,7 +174,10 @@ export default function DailyForecast({
                     </div>
 
                     <span className="w-9 shrink-0 text-right font-body text-sm font-semibold">
-                      {formatTemperature(convertedDays[0].high, unit)}
+                      {formatTemperature(
+                        convertedDays[0].high,
+                        unit
+                      )}
                     </span>
                   </div>
 
@@ -158,7 +194,8 @@ export default function DailyForecast({
           {convertedDays.slice(1).map((day, index) => {
             const actualIndex = index + 1
 
-            const leftPct = ((day.low - weekLow) / span) * 100
+            const leftPct =
+              ((day.low - weekLow) / span) * 100
 
             const widthPct = Math.max(
               ((day.high - day.low) / span) * 100,
@@ -184,7 +221,10 @@ export default function DailyForecast({
                     </p>
                   </div>
 
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink/5 dark:bg-paper/5">
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink/5 dark:bg-paper/5"
+                    aria-hidden="true"
+                  >
                     <WeatherIcon
                       condition={day.condition}
                       className="h-6 w-6 text-dusk dark:text-amber"
@@ -194,10 +234,16 @@ export default function DailyForecast({
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="w-8 shrink-0 text-right font-body text-xs text-slate">
-                        {formatTemperature(day.low, unit)}
+                        {formatTemperature(
+                          day.low,
+                          unit
+                        )}
                       </span>
 
-                      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-ink/10 dark:bg-paper/10">
+                      <div
+                        className="relative h-2 flex-1 overflow-hidden rounded-full bg-ink/10 dark:bg-paper/10"
+                        aria-hidden="true"
+                      >
                         <div
                           className="absolute top-0 h-full rounded-full bg-gradient-to-r from-dusk/80 to-amber transition-all duration-500 group-hover:brightness-110"
                           style={{
@@ -208,7 +254,10 @@ export default function DailyForecast({
                       </div>
 
                       <span className="w-8 shrink-0 font-body text-xs font-semibold text-ink dark:text-paper">
-                        {formatTemperature(day.high, unit)}
+                        {formatTemperature(
+                          day.high,
+                          unit
+                        )}
                       </span>
                     </div>
 
@@ -236,7 +285,10 @@ export default function DailyForecast({
 
         <div className="mt-5 flex flex-col gap-4 rounded-2xl border border-ink/10 bg-ink/[0.03] p-4 dark:border-paper/10 dark:bg-paper/[0.03] sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber/10 text-lg">
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber/10 text-lg"
+              aria-hidden="true"
+            >
               🌿
             </div>
 
@@ -251,10 +303,18 @@ export default function DailyForecast({
             </div>
           </div>
 
-          <div className="hidden h-10 w-px bg-ink/10 dark:bg-paper/10 sm:block" />
+          <div
+            className="hidden h-10 w-px bg-ink/10 dark:bg-paper/10 sm:block"
+            aria-hidden="true"
+          />
 
           <div className="flex items-center gap-3 sm:text-right">
-            <div className="text-lg">⌁</div>
+            <div
+              className="text-lg"
+              aria-hidden="true"
+            >
+              ⌁
+            </div>
 
             <div>
               <p className="font-body text-xs font-medium text-ink dark:text-paper">

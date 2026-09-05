@@ -4,6 +4,7 @@ import CurrentWeatherCard from './components/weather/CurrentWeatherCard'
 import HourlyForecast from './components/weather/HourlyForecast'
 import DailyForecast from './components/weather/DailyForecast'
 import FavoriteLocations from './components/weather/FavoriteLocations'
+import SunriseSunset from './components/weather/SunriseSunset'
 import { useTheme } from './hooks/useTheme'
 import { useFavorites } from './hooks/useFavorites'
 import { useTemperatureUnit } from './hooks/useTemperatureUnit'
@@ -44,11 +45,18 @@ export default function App() {
   const [selectedCity, setSelectedCity] =
     useState<CitySearchResult | null>(null)
 
-  const [suggestions, setSuggestions] = useState<CitySearchResult[]>([])
+  const [suggestions, setSuggestions] =
+    useState<CitySearchResult[]>([])
+
   const [query, setQuery] = useState('')
+
   const [loading, setLoading] = useState(true)
-  const [notice, setNotice] = useState<string | null>(null)
-  const [lastUpdated, setLastUpdated] = useState<number | null>(null)
+
+  const [notice, setNotice] =
+    useState<string | null>(null)
+
+  const [lastUpdated, setLastUpdated] =
+    useState<number | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -58,12 +66,17 @@ export default function App() {
         const match = results[0]
 
         if (!match) {
-          throw new WeatherApiError(`Could not find ${defaultCity}.`)
+          throw new WeatherApiError(
+            `Could not find ${defaultCity}.`
+          )
         }
 
         setSelectedCity(match)
 
-        return fetchWeather(match, controller.signal)
+        return fetchWeather(
+          match,
+          controller.signal
+        )
       })
       .then((weather) => {
         setSnapshot(weather)
@@ -71,7 +84,12 @@ export default function App() {
         setNotice(null)
       })
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === 'AbortError') return
+        if (
+          error instanceof DOMException &&
+          error.name === 'AbortError'
+        ) {
+          return
+        }
 
         setNotice(
           'Live weather is unavailable right now. Showing sample data instead.'
@@ -95,10 +113,18 @@ export default function App() {
     const controller = new AbortController()
 
     const timeout = window.setTimeout(() => {
-      searchCities(trimmedQuery, controller.signal)
+      searchCities(
+        trimmedQuery,
+        controller.signal
+      )
         .then(setSuggestions)
         .catch((error: unknown) => {
-          if (error instanceof DOMException && error.name === 'AbortError') return
+          if (
+            error instanceof DOMException &&
+            error.name === 'AbortError'
+          ) {
+            return
+          }
 
           setSuggestions([])
         })
@@ -110,18 +136,25 @@ export default function App() {
     }
   }, [query])
 
-  function handleQueryChange(nextQuery: string) {
+  function handleQueryChange(
+    nextQuery: string
+  ) {
     setQuery(nextQuery)
   }
 
-  async function handleSearch(city: CitySearchResult) {
+  async function handleSearch(
+    city: CitySearchResult
+  ) {
     const controller = new AbortController()
 
     setLoading(true)
     setNotice(null)
 
     try {
-      const weather = await fetchWeather(city, controller.signal)
+      const weather = await fetchWeather(
+        city,
+        controller.signal
+      )
 
       setSelectedCity(city)
       setSnapshot(weather)
@@ -129,7 +162,12 @@ export default function App() {
       setSuggestions([])
       setQuery('')
     } catch (error: unknown) {
-      if (error instanceof DOMException && error.name === 'AbortError') return
+      if (
+        error instanceof DOMException &&
+        error.name === 'AbortError'
+      ) {
+        return
+      }
 
       setNotice(
         error instanceof WeatherApiError
@@ -146,8 +184,11 @@ export default function App() {
     setNotice(null)
 
     try {
-      const location = await getCurrentLocation()
-      const weather = await fetchWeather(location)
+      const location =
+        await getCurrentLocation()
+
+      const weather =
+        await fetchWeather(location)
 
       setSelectedCity(location)
       setSnapshot(weather)
@@ -157,7 +198,9 @@ export default function App() {
     } catch (error: unknown) {
       if (error instanceof LocationApiError) {
         setNotice(error.message)
-      } else if (error instanceof WeatherApiError) {
+      } else if (
+        error instanceof WeatherApiError
+      ) {
         setNotice(error.message)
       } else {
         setNotice(
@@ -169,12 +212,15 @@ export default function App() {
     }
   }
 
-  async function handleFavoriteSelect(city: CitySearchResult) {
+  async function handleFavoriteSelect(
+    city: CitySearchResult
+  ) {
     setLoading(true)
     setNotice(null)
 
     try {
-      const weather = await fetchWeather(city)
+      const weather =
+        await fetchWeather(city)
 
       setSelectedCity(city)
       setSnapshot(weather)
@@ -191,13 +237,16 @@ export default function App() {
   }
 
   async function handleRefresh() {
-    if (!selectedCity) return
+    if (!selectedCity) {
+      return
+    }
 
     setLoading(true)
     setNotice(null)
 
     try {
-      const weather = await fetchWeather(selectedCity)
+      const weather =
+        await fetchWeather(selectedCity)
 
       setSnapshot(weather)
       setLastUpdated(Date.now())
@@ -213,7 +262,9 @@ export default function App() {
   }
 
   function handleToggleFavorite() {
-    if (!selectedCity) return
+    if (!selectedCity) {
+      return
+    }
 
     if (isFavorite(selectedCity)) {
       removeFavorite(selectedCity)
@@ -234,14 +285,23 @@ export default function App() {
         loading={loading}
       />
 
-      <main className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+      <main
+        id="main-content"
+        className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10"
+      >
         {(loading || notice) && (
-          <div className="mb-6 animate-rise rounded-xl border border-amber/30 bg-amber/10 px-4 py-3 font-body text-sm text-amber-dim dark:text-amber">
-            {loading ? 'Loading live weather…' : notice}
+          <div
+            role={loading ? 'status' : 'alert'}
+            aria-live={loading ? 'polite' : 'assertive'}
+            className="mb-6 animate-rise rounded-xl border border-amber/30 bg-amber/10 px-4 py-3 font-body text-sm text-amber-dim dark:text-amber"
+          >
+            {loading
+              ? 'Loading live weather…'
+              : notice}
           </div>
         )}
 
-        <div className="mb-6">
+        <div className="mb-6 min-w-0">
           <FavoriteLocations
             favorites={favorites}
             onSelect={handleFavoriteSelect}
@@ -249,40 +309,52 @@ export default function App() {
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <div className="flex flex-col gap-6 lg:col-span-2">
-           <CurrentWeatherCard
-  location={snapshot.location}
-  current={snapshot.current}
-  hourly={snapshot.hourly}
-  city={selectedCity}
-  isFavorite={
-    selectedCity
-      ? isFavorite(selectedCity)
-      : false
-  }
-  onToggleFavorite={handleToggleFavorite}
-  onRefresh={handleRefresh}
-  loading={loading}
-  unit={unit}
-  onToggleUnit={toggleUnit}
-  lastUpdated={lastUpdated}
-/>
+        <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
+          <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
+            <CurrentWeatherCard
+              location={snapshot.location}
+              current={snapshot.current}
+              hourly={snapshot.hourly}
+              city={selectedCity}
+              isFavorite={
+                selectedCity
+                  ? isFavorite(selectedCity)
+                  : false
+              }
+              onToggleFavorite={
+                handleToggleFavorite
+              }
+              onRefresh={handleRefresh}
+              loading={loading}
+              unit={unit}
+              onToggleUnit={toggleUnit}
+              lastUpdated={lastUpdated}
+            />
           </div>
 
-          <div className="lg:col-span-1">
+          {snapshot.daylight && (
+            <div className="min-w-0 lg:col-span-2">
+              <SunriseSunset
+                daylight={snapshot.daylight}
+              />
+            </div>
+          )}
+
+          <div className="min-w-0 lg:col-span-1">
             <HourlyForecast
               hours={snapshot.hourly}
               unit={unit}
             />
           </div>
 
-          <div className="lg:col-span-1">
-             <DailyForecast
-  days={snapshot.daily}
-  unit={unit}
-  currentTemperature={snapshot.current.temperature}
-/>
+          <div className="min-w-0 lg:col-span-1">
+            <DailyForecast
+              days={snapshot.daily}
+              unit={unit}
+              currentTemperature={
+                snapshot.current.temperature
+              }
+            />
           </div>
         </div>
 
