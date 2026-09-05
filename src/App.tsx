@@ -5,8 +5,19 @@ import HourlyForecast from './components/weather/HourlyForecast'
 import DailyForecast from './components/weather/DailyForecast'
 import { useTheme } from './hooks/useTheme'
 import { defaultCity, getWeatherForCity } from './data/mockWeather'
-import { fetchWeather, searchCities, WeatherApiError } from './services/weatherApi'
-import type { CitySearchResult, WeatherSnapshot } from './types/weather'
+import {
+  fetchWeather,
+  searchCities,
+  WeatherApiError
+} from './services/weatherApi'
+import {
+  getCurrentLocation,
+  LocationApiError
+} from './services/locationApi'
+import type {
+  CitySearchResult,
+  WeatherSnapshot
+} from './types/weather'
 
 export default function App() {
   const { theme, toggleTheme } = useTheme()
@@ -106,6 +117,32 @@ export default function App() {
     }
   }
 
+  async function handleUseLocation() {
+    setLoading(true)
+    setNotice(null)
+
+    try {
+      const location = await getCurrentLocation()
+      const weather = await fetchWeather(location)
+
+      setSnapshot(weather)
+      setSuggestions([])
+      setQuery('')
+    } catch (error: unknown) {
+      if (error instanceof LocationApiError) {
+        setNotice(error.message)
+      } else if (error instanceof WeatherApiError) {
+        setNotice(error.message)
+      } else {
+        setNotice(
+          'Unable to load weather for your location. Please try again.'
+        )
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen">
       <Header
@@ -114,6 +151,8 @@ export default function App() {
         suggestions={suggestions}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onUseLocation={handleUseLocation}
+        loading={loading}
       />
 
       <main className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
