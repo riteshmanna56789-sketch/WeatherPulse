@@ -179,6 +179,27 @@ export default function App() {
     }
   }
 
+  async function handleRefresh() {
+    if (!selectedCity) return
+
+    setLoading(true)
+    setNotice(null)
+
+    try {
+      const weather = await fetchWeather(selectedCity)
+
+      setSnapshot(weather)
+    } catch (error: unknown) {
+      setNotice(
+        error instanceof WeatherApiError
+          ? error.message
+          : 'Unable to refresh weather. Please check your connection and try again.'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
   function handleToggleFavorite() {
     if (!selectedCity) return
 
@@ -228,6 +249,8 @@ export default function App() {
                   : false
               }
               onToggleFavorite={handleToggleFavorite}
+              onRefresh={handleRefresh}
+              loading={loading}
             />
           </div>
 

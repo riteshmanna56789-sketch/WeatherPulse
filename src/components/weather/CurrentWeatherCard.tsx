@@ -12,6 +12,8 @@ interface CurrentWeatherCardProps {
   city: CitySearchResult | null
   isFavorite: boolean
   onToggleFavorite: () => void
+  onRefresh: () => void
+  loading: boolean
 }
 
 export default function CurrentWeatherCard({
@@ -19,7 +21,9 @@ export default function CurrentWeatherCard({
   current,
   city,
   isFavorite,
-  onToggleFavorite
+  onToggleFavorite,
+  onRefresh,
+  loading
 }: CurrentWeatherCardProps) {
   return (
     <section className="animate-rise rounded-3xl border border-ink/10 bg-gradient-to-br from-white/80 to-white/40 p-6 shadow-[0_1px_0_0_rgba(15,27,45,0.04)] dark:border-paper/10 dark:from-ink-soft/80 dark:to-ink-soft/30 sm:p-8">
@@ -55,6 +59,31 @@ export default function CurrentWeatherCard({
                 </svg>
               </button>
             )}
+
+            <button
+              type="button"
+              onClick={onRefresh}
+              disabled={loading || !city}
+              aria-label="Refresh weather"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-amber/10 hover:text-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className={`h-4 w-4 ${
+                  loading ? 'animate-spin' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M20 11a8 8 0 0 0-14.7-4.2L4 9" />
+                <path d="M4 4v5h5" />
+                <path d="M4 13a8 8 0 0 0 14.7 4.2L20 15" />
+                <path d="M20 20v-5h-5" />
+              </svg>
+            </button>
           </div>
 
           <div className="mt-3 flex items-end gap-4">
