@@ -1,18 +1,22 @@
 import type {
   CitySearchResult,
   CurrentWeather,
+  HourlyReading,
   LocationInfo
 } from '../../types/weather'
 import type { TemperatureUnit } from '../../utils/temperature'
 import { formatTemperature } from '../../utils/temperature'
+import { getWeatherInsight } from '../../utils/weatherInsights'
 import WeatherIcon from '../ui/WeatherIcon'
 import StatTick from './StatTick'
 import FeelsLikeIndicator from './FeelsLikeIndicator'
 import UvIndexIndicator from './UvIndexIndicator'
+import WeatherInsight from './WeatherInsight'
 
 interface CurrentWeatherCardProps {
   location: LocationInfo
   current: CurrentWeather
+  hourly: HourlyReading[]
   city: CitySearchResult | null
   isFavorite: boolean
   onToggleFavorite: () => void
@@ -26,6 +30,7 @@ interface CurrentWeatherCardProps {
 export default function CurrentWeatherCard({
   location,
   current,
+  hourly,
   city,
   isFavorite,
   onToggleFavorite,
@@ -41,6 +46,8 @@ export default function CurrentWeatherCard({
         minute: '2-digit'
       }).format(lastUpdated)
     : null
+
+  const insight = getWeatherInsight(current, hourly)
 
   return (
     <section className="relative isolate overflow-hidden rounded-3xl border border-ink/10 bg-gradient-to-br from-white via-white/90 to-sky-500/5 p-5 shadow-[0_20px_60px_rgba(15,27,45,0.08)] dark:border-paper/10 dark:from-ink-soft dark:via-ink-soft/95 dark:to-sky-500/5 sm:p-7 lg:p-8">
@@ -62,6 +69,7 @@ export default function CurrentWeatherCard({
                 strokeLinejoin="round"
               >
                 <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z" />
+
                 <circle
                   cx="12"
                   cy="10"
@@ -208,6 +216,8 @@ export default function CurrentWeatherCard({
                 uvIndex={current.uvIndex}
               />
             </div>
+
+            <WeatherInsight insight={insight} />
 
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
               <div className="flex items-center gap-2">

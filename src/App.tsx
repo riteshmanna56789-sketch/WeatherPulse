@@ -251,22 +251,23 @@ export default function App() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
           <div className="flex flex-col gap-6 lg:col-span-2">
-            <CurrentWeatherCard
-              location={snapshot.location}
-              current={snapshot.current}
-              city={selectedCity}
-              isFavorite={
-                selectedCity
-                  ? isFavorite(selectedCity)
-                  : false
-              }
-              onToggleFavorite={handleToggleFavorite}
-              onRefresh={handleRefresh}
-              loading={loading}
-              unit={unit}
-              onToggleUnit={toggleUnit}
-              lastUpdated={lastUpdated}
-            />
+           <CurrentWeatherCard
+  location={snapshot.location}
+  current={snapshot.current}
+  hourly={snapshot.hourly}
+  city={selectedCity}
+  isFavorite={
+    selectedCity
+      ? isFavorite(selectedCity)
+      : false
+  }
+  onToggleFavorite={handleToggleFavorite}
+  onRefresh={handleRefresh}
+  loading={loading}
+  unit={unit}
+  onToggleUnit={toggleUnit}
+  lastUpdated={lastUpdated}
+/>
           </div>
 
           <div className="lg:col-span-1">
