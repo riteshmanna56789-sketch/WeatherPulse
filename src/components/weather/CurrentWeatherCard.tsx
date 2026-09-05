@@ -3,8 +3,11 @@ import type {
   CurrentWeather,
   LocationInfo
 } from '../../types/weather'
+import type { TemperatureUnit } from '../../utils/temperature'
+import { formatTemperature } from '../../utils/temperature'
 import WeatherIcon from '../ui/WeatherIcon'
 import StatTick from './StatTick'
+import FeelsLikeIndicator from './FeelsLikeIndicator'
 
 interface CurrentWeatherCardProps {
   location: LocationInfo
@@ -14,6 +17,8 @@ interface CurrentWeatherCardProps {
   onToggleFavorite: () => void
   onRefresh: () => void
   loading: boolean
+  unit: TemperatureUnit
+  onToggleUnit: () => void
 }
 
 export default function CurrentWeatherCard({
@@ -23,7 +28,9 @@ export default function CurrentWeatherCard({
   isFavorite,
   onToggleFavorite,
   onRefresh,
-  loading
+  loading,
+  unit,
+  onToggleUnit
 }: CurrentWeatherCardProps) {
   return (
     <section className="animate-rise rounded-3xl border border-ink/10 bg-gradient-to-br from-white/80 to-white/40 p-6 shadow-[0_1px_0_0_rgba(15,27,45,0.04)] dark:border-paper/10 dark:from-ink-soft/80 dark:to-ink-soft/30 sm:p-8">
@@ -55,7 +62,7 @@ export default function CurrentWeatherCard({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
+                  <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8-1-5.9-4.3-4.2 5.9-.9L12 3.5Z" />
                 </svg>
               </button>
             )}
@@ -84,11 +91,40 @@ export default function CurrentWeatherCard({
                 <path d="M20 20v-5h-5" />
               </svg>
             </button>
+
+            <button
+              type="button"
+              onClick={onToggleUnit}
+              aria-label={`Switch to ${
+                unit === 'celsius' ? 'Fahrenheit' : 'Celsius'
+              }`}
+              className="ml-1 flex h-8 items-center rounded-full border border-ink/10 bg-white/60 px-1 font-body text-xs font-semibold text-slate transition-colors hover:border-amber/40 hover:bg-amber/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber dark:border-paper/10 dark:bg-ink-soft/60"
+            >
+              <span
+                className={`rounded-full px-2 py-1 transition-colors ${
+                  unit === 'celsius'
+                    ? 'bg-ink text-paper dark:bg-paper dark:text-ink'
+                    : ''
+                }`}
+              >
+                °C
+              </span>
+
+              <span
+                className={`rounded-full px-2 py-1 transition-colors ${
+                  unit === 'fahrenheit'
+                    ? 'bg-ink text-paper dark:bg-paper dark:text-ink'
+                    : ''
+                }`}
+              >
+                °F
+              </span>
+            </button>
           </div>
 
           <div className="mt-3 flex items-end gap-4">
             <span className="font-display text-7xl font-light leading-none text-ink dark:text-paper sm:text-8xl">
-              {current.temperature}°
+              {formatTemperature(current.temperature, unit)}
             </span>
 
             <div className="mb-2 flex items-center gap-2 text-dusk dark:text-amber">
@@ -103,8 +139,13 @@ export default function CurrentWeatherCard({
             </div>
           </div>
 
+          <FeelsLikeIndicator
+            temperature={current.feelsLike}
+            unit={unit}
+          />
+
           <p className="mt-2 font-body text-sm text-slate">
-            Feels like {current.feelsLike}° · Local time {location.localTime}
+            Local time {location.localTime}
           </p>
         </div>
 

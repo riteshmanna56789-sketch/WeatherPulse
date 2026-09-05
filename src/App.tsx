@@ -6,6 +6,7 @@ import DailyForecast from './components/weather/DailyForecast'
 import FavoriteLocations from './components/weather/FavoriteLocations'
 import { useTheme } from './hooks/useTheme'
 import { useFavorites } from './hooks/useFavorites'
+import { useTemperatureUnit } from './hooks/useTemperatureUnit'
 import { defaultCity, getWeatherForCity } from './data/mockWeather'
 import {
   fetchWeather,
@@ -30,6 +31,11 @@ export default function App() {
     removeFavorite,
     isFavorite
   } = useFavorites()
+
+  const {
+    unit,
+    toggleUnit
+  } = useTemperatureUnit()
 
   const [snapshot, setSnapshot] = useState<WeatherSnapshot>(() =>
     getWeatherForCity(defaultCity)
@@ -251,15 +257,23 @@ export default function App() {
               onToggleFavorite={handleToggleFavorite}
               onRefresh={handleRefresh}
               loading={loading}
+              unit={unit}
+              onToggleUnit={toggleUnit}
             />
           </div>
 
           <div className="lg:col-span-1">
-            <HourlyForecast hours={snapshot.hourly} />
+           <HourlyForecast
+  hours={snapshot.hourly}
+  unit={unit}
+/>
           </div>
 
           <div className="lg:col-span-1">
-            <DailyForecast days={snapshot.daily} />
+           <DailyForecast
+  days={snapshot.daily}
+  unit={unit}
+/>
           </div>
         </div>
 
