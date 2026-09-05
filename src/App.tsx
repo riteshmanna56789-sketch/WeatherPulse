@@ -3,7 +3,9 @@ import Header from './components/layout/Header'
 import CurrentWeatherCard from './components/weather/CurrentWeatherCard'
 import HourlyForecast from './components/weather/HourlyForecast'
 import DailyForecast from './components/weather/DailyForecast'
+import FavoriteLocations from './components/weather/FavoriteLocations'
 import { useTheme } from './hooks/useTheme'
+import { useFavorites } from './hooks/useFavorites'
 import { defaultCity, getWeatherForCity } from './data/mockWeather'
 import {
   fetchWeather,
@@ -22,9 +24,19 @@ import type {
 export default function App() {
   const { theme, toggleTheme } = useTheme()
 
+  const {
+    favorites,
+    addFavorite,
+    removeFavorite,
+    isFavorite
+  } = useFavorites()
+
   const [snapshot, setSnapshot] = useState<WeatherSnapshot>(() =>
     getWeatherForCity(defaultCity)
   )
+
+  const [selectedCity, setSelectedCity] =
+    useState<CitySearchResult | null>(null)
 
   const [suggestions, setSuggestions] = useState<CitySearchResult[]>([])
   const [query, setQuery] = useState('')
@@ -41,6 +53,8 @@ export default function App() {
         if (!match) {
           throw new WeatherApiError(`Could not find ${defaultCity}.`)
         }
+
+        setSelectedCity(match)
 
         return fetchWeather(match, controller.signal)
       })
@@ -101,6 +115,7 @@ export default function App() {
     try {
       const weather = await fetchWeather(city, controller.signal)
 
+      setSelectedCity(city)
       setSnapshot(weather)
       setSuggestions([])
       setQuery('')
@@ -125,6 +140,7 @@ export default function App() {
       const location = await getCurrentLocation()
       const weather = await fetchWeather(location)
 
+      setSelectedCity(location)
       setSnapshot(weather)
       setSuggestions([])
       setQuery('')
@@ -140,6 +156,36 @@ export default function App() {
       }
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleFavoriteSelect(city: CitySearchResult) {
+    setLoading(true)
+    setNotice(null)
+
+    try {
+      const weather = await fetchWeather(city)
+
+      setSelectedCity(city)
+      setSnapshot(weather)
+    } catch (error: unknown) {
+      setNotice(
+        error instanceof WeatherApiError
+          ? error.message
+          : 'Unable to load live weather. Please check your connection and try again.'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleToggleFavorite() {
+    if (!selectedCity) return
+
+    if (isFavorite(selectedCity)) {
+      removeFavorite(selectedCity)
+    } else {
+      addFavorite(selectedCity)
     }
   }
 
@@ -162,11 +208,26 @@ export default function App() {
           </div>
         )}
 
+        <div className="mb-6">
+          <FavoriteLocations
+            favorites={favorites}
+            onSelect={handleFavoriteSelect}
+            onRemove={removeFavorite}
+          />
+        </div>
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
           <div className="flex flex-col gap-6 lg:col-span-2">
             <CurrentWeatherCard
               location={snapshot.location}
               current={snapshot.current}
+              city={selectedCity}
+              isFavorite={
+                selectedCity
+                  ? isFavorite(selectedCity)
+                  : false
+              }
+              onToggleFavorite={handleToggleFavorite}
             />
           </div>
 
